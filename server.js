@@ -24,3 +24,16 @@ mongodb.connect(
     }
   );
   
+  app.use(express.json())
+
+  app.get('/read',(req,res)=>{
+db.collection('UserSchema')
+.find({})
+
+.toArray((err, results) => {
+  // Handles error or results
+  if (err) throw err;
+  res.send(results);
+});
+
+  })
