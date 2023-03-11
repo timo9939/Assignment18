@@ -77,13 +77,31 @@ app.get("/Thought/read/:_id", (req, res)=>{
 app.post("/Thought/add", (req,res)=>{
   Thought.create({
     thoughtText: req.body.thoughtText,
-    createdAt:req.body.createdAt,
     username: req.body.username,
   })
   .then(data=>res.status(200).json(data))
   .catch(err=>res.status(500).json(err))
 })
 
+app.put("/Thought/update/:_id", (req,res)=>{
+  Thought.findOneAndUpdate(
+   
+    {_id:req.params._id},
+
+   req.body,
+    {new:true},
+  )
+  .then(data=>res.status(200).json(data))
+  .catch(err=>res.status(500).json(err))
+})
+
+app.delete("/Thought/delete/:_id",(req,res)=>{
+  Thought.deleteOne({
+    _id:req.params._id,
+  })
+  .then(data=>res.status(200).json(data))
+  .catch(err=>res.status(500).json(err))
+})
 
 
 db.once('open', () => {
