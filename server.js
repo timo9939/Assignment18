@@ -3,7 +3,7 @@
 
 const express = require('express');
 const db = require('./config/connection');
-const {User}=require("./models")
+const {User,Thought}=require("./models")
 const {ObjectId}=require('mongoose').Types
 
 
@@ -13,6 +13,7 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// User API
 
 app.get("/readAll", (req, res)=>{
   User.find({})
@@ -56,6 +57,33 @@ app.delete("/User/delete/:_id",(req,res)=>{
   .then(data=>res.status(200).json(data))
   .catch(err=>res.status(500).json(err))
 })
+
+// Thoughts API
+
+app.get("/Thought/readAll", (req, res)=>{
+  Thought.find({})
+  .then(data=>res.status(200).json(data))
+  .catch(err=>res.status(500).json(err))
+})
+
+app.get("/Thought/read/:_id", (req, res)=>{
+  Thought.findOne({
+    _id:req.params._id,
+  })
+  .then(data=>res.status(200).json(data))
+  .catch(err=>res.status(500).json(err))
+})
+
+app.post("/Thought/add", (req,res)=>{
+  Thought.create({
+    thoughtText: req.body.thoughtText,
+    createdAt:req.body.createdAt,
+    username: req.body.username,
+  })
+  .then(data=>res.status(200).json(data))
+  .catch(err=>res.status(500).json(err))
+})
+
 
 
 db.once('open', () => {
