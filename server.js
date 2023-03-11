@@ -1,39 +1,36 @@
-const express= require('express')
 
-const mongodb = require('mongodb').MongoClient
 
-const app=express()
-const port =3001
 
-const connectionStringURI = `mongodb://127.0.0.1:27017/inventoryDB`;
+const express = require('express');
+const db = require('./config/connection');
+const {User}=require("./models")
+const {ObjectId}=require('mongoose').Types
 
-// Declare a variable to hold the connection
-let db;
 
-mongodb.connect(
-    // Defines connection between app and MongoDB instance
-    connectionStringURI,
-    // Sets connection string parser and Server Discover and Monitoring engine to true and avoids warning
-    { useNewUrlParser: true, useUnifiedTopology: true },
-    (err, client) => {
-      // Use client.db() constructor to add new db instance
-      db = client.db();
-      app.listen(port, () => {
-        console.log(`Example app listening at http://localhost:${port}`);
-      });
-    }
-  );
-  
-  app.use(express.json())
+const PORT = process.env.PORT || 3001;
+const app = express();
 
-  app.get('/read',(req,res)=>{
-db.collection('UserSchema')
-.find({})
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-.toArray((err, results) => {
-  // Handles error or results
-  if (err) throw err;
-  res.send(results);
-});
 
+app.get("/", (req, res)=>{
+  User.find({})
+  .then(data=>res.json(data))
+  .catch(err=>res.status(500).json(err))
+})
+
+app.post("/add",(req,res)=>{
+  User.create({
+    username: req.body.username,
+    email: req.body.email,
   })
+  .then(data=>res.status(200).json(data))
+  .catch(err=>res.status(500).json(err))
+})
+
+db.once('open', () => {
+  app.listen(PORT, () => {
+    console.log(`API server running on port ${PORT}!`);
+  });
+});
