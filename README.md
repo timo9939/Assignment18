@@ -2,7 +2,7 @@
 ***
 
 ## 💬 Description
-This is a demonstration of social network api which contain get,post, delete and put request. The user can share their thoughts and create a friend list.
+This is a demonstration of social network api which contain get,post, delete and put request. The user can share their thoughts and create a friend lists.
 
 ***
 
